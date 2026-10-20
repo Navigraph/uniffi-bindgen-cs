@@ -149,6 +149,11 @@ pub(super) fn enum_field_name(
     }
 }
 
+/// Whether any field has a docstring. C# then expects a `<param>` tag for every positional parameter (CS1573).
+pub(super) fn has_docstrings(fields: &[Field]) -> Result<bool, askama::Error> {
+    Ok(fields.iter().any(|field| field.docstring().is_some()))
+}
+
 /// Generate a correct array allocation expression for potentially jagged arrays.
 /// Transforms e.g. "byte[]" → "new byte[length][]" to avoid the invalid "new byte[][length]" form.
 pub(super) fn array_new_expr(inner_type_name: &str) -> Result<String, askama::Error> {
