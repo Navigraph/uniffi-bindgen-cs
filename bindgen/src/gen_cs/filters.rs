@@ -202,9 +202,17 @@ pub(super) fn object_names(
     Ok(oracle().object_names(obj, ci))
 }
 
+/// Escape text for an XML doc comment, so `Vec<T>` in a docstring stays text (CS1570).
+pub(super) fn xml_escape(text: &str) -> Result<String, askama::Error> {
+    Ok(text
+        .replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;"))
+}
+
 /// Get the idiomatic C# rendering of docstring
 pub(super) fn docstring(docstring: &str, spaces: &i32) -> Result<String, askama::Error> {
-    let middle = textwrap::indent(&textwrap::dedent(docstring), "/// ");
+    let middle = textwrap::indent(&xml_escape(&textwrap::dedent(docstring))?, "/// ");
     let wrapped = format!("/// <summary>\n{middle}\n/// </summary>");
 
     let spaces = usize::try_from(*spaces).unwrap_or_default();

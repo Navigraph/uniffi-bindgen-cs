@@ -15,7 +15,7 @@
 /// <param name="{{ field.name()|property_name }}">
 {%- let docstring = textwrap::dedent(docstring) %}
 {%- for line in docstring.lines() %}
-/// {{ line.trim_end() }}
+/// {{ line.trim_end()|xml_escape }}
 {%- endfor %}
 /// </param>
 {%- else %}
